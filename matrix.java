@@ -3,6 +3,7 @@
 /* Ursprunglig författare: Viggo Kann KTH viggo@nada.kth.se      */
 import java.util.LinkedList;
 import java.util.List;
+import java.io.*;
 
 class ClosestWords {
 
@@ -22,12 +23,13 @@ class ClosestWords {
     return res;
   }
 
-  public static void main(String [] args) {
-    String a = "labi";
-    String b = "blad";
+  public static void main(String [] args) throws IOException {
+    BufferedReader stdin = new BufferedReader(new InputStreamReader(System.in, "UTF-8"));
+    String a = stdin.readLine();
+    String b = stdin.readLine();
     System.out.println(a + " " + b);
-    for(int i = 0; i < 5; i++) {
-      for(int j = 0; j < 5; j++) {
+    for(int i = 0; i <= b.length(); i++) {
+      for(int j = 0; j <= a.length(); j++) {
         System.out.print(partDist(a, b, j, i) + " ");
       }
       System.out.println("");

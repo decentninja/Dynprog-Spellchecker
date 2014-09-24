@@ -5,6 +5,7 @@ import java.io.BufferedReader;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.io.PrintStream;
 
 public class Speller {
 	private final int maxrows = 500000;
@@ -28,11 +29,10 @@ public class Speller {
 	public SpellingResult spell(String word) {
 		Distancer distancer = new Distancer(maxlength);
 		SpellingResult result = new SpellingResult();
-		String previous = "";
 		for(Row row : rows) {
-			int distance = distancer.distance(row.matching, row.word, previous);
+			int distance = distancer.distance(row.matching, row.word, word);
 			if(distance > result.distance) {
-				break;
+				continue;
 			}
 			if(distance < result.distance) {
 				result.distance = distance;
@@ -59,11 +59,18 @@ public class Speller {
 
 	public static void main(String[] args) throws IOException {
 		BufferedReader stdin = new BufferedReader(new InputStreamReader(System.in, "UTF-8"));
+		PrintStream out = new PrintStream(System.out, false, "UTF-8");
 		Speller speller = new Speller();
 		speller.readWords(stdin);
 		String word;
     	while ((word = stdin.readLine()) != null) {
     		SpellingResult result = speller.spell(word);
+    		out.printf("%s (%d)", word, result.distance);
+    		for(String match : result.possibleSpellings) {
+    			out.print(" " + match);		// Fast enough?
+    		}
+    		out.println("");
+    		out.flush();
     	}
 	}
 
