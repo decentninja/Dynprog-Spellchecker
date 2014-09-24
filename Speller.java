@@ -9,28 +9,26 @@ import java.io.PrintStream;
 
 public class Speller {
 	private final int maxrows = 500000;
-	private List<Row> rows = new ArrayList<Row>(maxrows);
+	private List<String> rows = new ArrayList<>(maxrows);
 	private int maxlength = 0;
 
 	public void readWords(BufferedReader input) throws IOException {
 		String word;
 		String previous = "";
 		while (!(word = input.readLine()).equals("#")) {
-			int j = 0;
-			while(previous.length() > j && word.length() > j && previous.charAt(j) == word.charAt(j)) {
-				j++;
-			}
-			rows.add(new Row(j, word));
+			rows.add(word);
 			maxlength = Math.max(word.length(), maxlength);
-			previous = word;
 		}
 	}
 
 	public SpellingResult spell(String word) {
 		Distancer distancer = new Distancer(maxlength);
 		SpellingResult result = new SpellingResult();
-		for(Row row : rows) {
-			int distance = distancer.distance(row.matching, row.word, word);
+		for(String row : rows) {
+			if (Math.abs(row.length() - word.length()) > result.distance) {
+				continue;
+			}
+			int distance = distancer.distance(row, word);
 			if(distance > result.distance) {
 				continue;
 			}
@@ -38,18 +36,9 @@ public class Speller {
 				result.distance = distance;
 				result.possibleSpellings.clear();
 			}
-			result.possibleSpellings.add(row.word);
+			result.possibleSpellings.add(row);
 		}
 		return result;
-	}
-
-	private static class Row {
-		int matching;
-		String word;
-		Row(int matching, String word) {
-			this.matching = matching;
-			this.word = word;
-		}
 	}
 
 	public static class SpellingResult {
@@ -63,15 +52,15 @@ public class Speller {
 		Speller speller = new Speller();
 		speller.readWords(stdin);
 		String word;
-    	while ((word = stdin.readLine()) != null) {
-    		SpellingResult result = speller.spell(word);
-    		out.printf("%s (%d)", word, result.distance);
-    		for(String match : result.possibleSpellings) {
-    			out.print(" " + match);		// Fast enough?
-    		}
-    		out.println("");
-    		out.flush();
-    	}
+		while ((word = stdin.readLine()) != null) {
+			SpellingResult result = speller.spell(word);
+			out.printf("%s (%d)", word, result.distance);
+			for(String match : result.possibleSpellings) {
+				out.print(" " + match);		// Fast enough?
+			}
+			out.println();
+			out.flush();
+		}
 	}
 
 }

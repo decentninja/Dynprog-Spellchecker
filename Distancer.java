@@ -1,5 +1,6 @@
 public class Distancer {
 	private int[][] matrix;
+	private String previous = "";
 
 	public Distancer(int maxlength) {
 		matrix = new int[maxlength + 1][maxlength + 1];
@@ -9,7 +10,12 @@ public class Distancer {
 		}
 	}
 
-	public int distance(int matching, String a, String b) {
+	public int distance(String a, String b) {
+		int matching = 0;
+		while (matching < a.length() && matching < previous.length() && a.charAt(matching) == previous.charAt(matching)) {
+			matching++;
+		}
+		previous = a;
 		for(int i = 1; i <= matching; i++) {
 			for(int j = matching + 1; j <= b.length(); j++) {
 				cell(a, b, i, j);
@@ -28,12 +34,12 @@ public class Distancer {
 			matrix[i][j] = matrix[i - 1][j - 1];
 		} else {
 			matrix[i][j] = 1 + Math.min(
-				matrix[i - 1][j - 1],
-				Math.min(
-					matrix[i - 1][j],
-					matrix[i][j - 1]
-				)
-			);
+					matrix[i - 1][j - 1],
+					Math.min(
+						matrix[i - 1][j],
+						matrix[i][j - 1]
+						)
+					);
 		}
 	}
 }
