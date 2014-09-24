@@ -8,36 +8,20 @@ import java.io.InputStreamReader;
 
 public class Speller {
 	private final int maxrows = 500000;
-	private List<Row> rows = new ArrayList<Row>();
+	private List<Row> rows = new ArrayList<Row>(maxrows);
 	private int maxlength = 0;
 
-	public void initialize(BufferedReader input) throws IOException {
-		readWords(input);
-		countPrefix();
-	}
-
 	public void readWords(BufferedReader input) throws IOException {
-		Row[] rows = new Row[maxrows];
-		String word = input.readLine();
-		int i = maxrows - 1;
-		do {
-			rows[i] = new Row(0, word);
-			word = input.readLine();
-			maxlength = Math.max(word.length(), maxlength);
-			i--;
-		} while(!word.equals("#"));
-		this.rows = Arrays.asList(rows).subList(i + 1, maxrows);
-	}
-
-	public void countPrefix() {
+		String word;
 		String previous = "";
-		for(Row row : rows) {
+		while (!(word = input.readLine()).equals("#")) {
 			int j = 0;
-			while(previous.length() > j && row.word.length() > j && previous.charAt(j) == row.word.charAt(j)) {
+			while(previous.length() > j && word.length() > j && previous.charAt(j) == word.charAt(j)) {
 				j++;
 			}
-			row.matching = j;
-			previous = row.word;
+			rows.add(new Row(j, word));
+			maxlength = Math.max(word.length(), maxlength);
+			previous = word;
 		}
 	}
 
@@ -76,8 +60,8 @@ public class Speller {
 	public static void main(String[] args) throws IOException {
 		BufferedReader stdin = new BufferedReader(new InputStreamReader(System.in, "UTF-8"));
 		Speller speller = new Speller();
-		speller.initialize(stdin);
-		for(int i = 0; i < 10; i++) {
+		speller.readWords(stdin);
+		for(int i = speller.rows.size() - 10; i < speller.rows.size(); i++) {
 			Row row = speller.rows.get(i);
 			System.err.println(row.matching + " " + row.word);
 		}
