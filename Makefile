@@ -1,5 +1,5 @@
-run: Speller.class
+run: build
 	java Speller
 
-Speller.class:
+build:
 	javac Speller.java
