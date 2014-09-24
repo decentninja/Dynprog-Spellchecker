@@ -61,10 +61,6 @@ public class Speller {
 		BufferedReader stdin = new BufferedReader(new InputStreamReader(System.in, "UTF-8"));
 		Speller speller = new Speller();
 		speller.readWords(stdin);
-		for(int i = speller.rows.size() - 10; i < speller.rows.size(); i++) {
-			Row row = speller.rows.get(i);
-			System.err.println(row.matching + " " + row.word);
-		}
 		String word;
     	while ((word = stdin.readLine()) != null) {
     		SpellingResult result = speller.spell(word);
