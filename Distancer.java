@@ -16,11 +16,6 @@ public class Distancer {
 			matching++;
 		}
 		previous = a;
-		for(int i = 1; i <= matching; i++) {
-			for(int j = matching + 1; j <= b.length(); j++) {
-				cell(a, b, i, j);
-			}
-		}
 		for(int i = matching + 1; i <= a.length(); i++) {
 			for(int j = 1; j <= b.length(); j++) {
 				cell(a, b, i, j);

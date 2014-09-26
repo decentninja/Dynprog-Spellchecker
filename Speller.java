@@ -9,7 +9,7 @@ import java.io.PrintStream;
 
 public class Speller {
 	private final int maxrows = 500000;
-	private List<String> rows = new ArrayList<>(maxrows);
+	private List<String> rows = new ArrayList<String>(maxrows);
 	private int maxlength = 0;
 
 	public void readWords(BufferedReader input) throws IOException {
